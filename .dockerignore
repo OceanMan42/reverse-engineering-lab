@@ -1,3 +1,9 @@
 .git
 .github
 tests
+__pycache__
+**/__pycache__
+# Built binaries: the image always compiles its own.
+part-*/*
+!part-*/*.c
+!part-*/*.h
