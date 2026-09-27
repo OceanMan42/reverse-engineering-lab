@@ -1,6 +1,6 @@
 # Reverse Engineering lab
 
-The lab for the [Reverse Engineering](https://0x4142.com/blog/reverse-engineering)
+The lab for the [Reverse Engineering](https://blog.0x4142.com/blog/reverse-engineering)
 series on 0x4142. Every binary and every terminal session shown in the
 series comes from this image, so what you see in the posts is what you get
 here.
