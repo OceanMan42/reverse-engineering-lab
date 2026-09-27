@@ -1,0 +1,4 @@
+/part-*/*
+!/part-*/*.c
+!/part-*/*.h
+__pycache__/
