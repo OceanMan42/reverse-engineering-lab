@@ -1,5 +1,7 @@
 FROM ubuntu:24.04@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3
 
+LABEL org.opencontainers.image.source="https://github.com/OceanMan42/reverse-engineering-lab"
+
 ENV DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8
 
 # Install from a dated archive snapshot so a rebuild gets the same gcc,

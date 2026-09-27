@@ -1,9 +1,8 @@
 # Reverse Engineering lab
 
-The lab for the [Reverse Engineering](https://0x4142.example/blog/reverse-engineering)
-series on 0x4142. Every binary and every terminal session shown in the
-series comes from this image, so what you see in the posts is what you get
-here.
+The lab for the Reverse Engineering series on the 0x4142 blog. Every
+binary and every terminal session shown in the series comes from this
+image, so what you see in the posts is what you get here.
 
 ## Run it
 
