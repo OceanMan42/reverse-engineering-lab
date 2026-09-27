@@ -29,6 +29,7 @@ from pathlib import Path
 
 LAB_ROOT = Path(__file__).resolve().parent
 MAX_COLUMNS = 80
+TIMEOUT = 30
 NAME = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
 ANSI = re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
 ENV = {
@@ -68,15 +69,21 @@ def load_scenario(path: Path) -> dict:
 
 
 def _run(step: dict, cwd: Path) -> str:
-    result = subprocess.run(
-        ["bash", "-c", step["command"]],
-        cwd=cwd,
-        env=ENV,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        timeout=30,
-    )
+    try:
+        result = subprocess.run(
+            ["bash", "-c", step["command"]],
+            cwd=cwd,
+            env=ENV,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            encoding="utf-8",
+            errors="replace",
+            timeout=TIMEOUT,
+        )
+    except (FileNotFoundError, NotADirectoryError):
+        raise ScenarioError(f"cwd '{cwd.name}' does not exist")
+    except subprocess.TimeoutExpired:
+        raise ScenarioError(f"'{step['command']}' timed out after {TIMEOUT}s")
     if result.returncode != 0 and not step.get("allow_failure", False):
         raise ScenarioError(
             f"'{step['command']}' exited with {result.returncode}:\n{result.stdout}"
@@ -122,6 +129,8 @@ def main(argv: list[str]) -> int:
                     f"{path}: use lowercase letters, digits, '-' and '_' only"
                 )
             results[rel] = capture(load_scenario(path), LAB_ROOT)
+        if not results:
+            raise ScenarioError(f"no scenarios found in {scenario_dir}")
     except (ScenarioError, tomllib.TOMLDecodeError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1

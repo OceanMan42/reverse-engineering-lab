@@ -101,6 +101,24 @@ class CaptureTest(unittest.TestCase):
         )
         self.assertEqual(result["frames"][0]["output"], "x")
 
+    def test_missing_cwd_raises(self):
+        with self.assertRaisesRegex(cap.ScenarioError, "cwd 'nope' does not exist"):
+            cap.capture(self.scenario({"label": "l", "command": "echo hi"}, cwd="nope"), self.lab)
+
+    def test_timeout_raises(self):
+        try:
+            cap.TIMEOUT = 1
+            with self.assertRaisesRegex(cap.ScenarioError, "timed out after 1s"):
+                cap.capture(self.scenario({"label": "l", "command": "sleep 5"}), self.lab)
+        finally:
+            cap.TIMEOUT = 30
+
+    def test_invalid_bytes_replaced(self):
+        result = cap.capture(
+            self.scenario({"label": "l", "command": "printf '\\xff'"}), self.lab
+        )
+        self.assertIn("�", result["frames"][0]["output"])
+
 
 class WideLinesTest(unittest.TestCase):
     def frame(self, output):
@@ -144,6 +162,11 @@ class MainTest(unittest.TestCase):
     def test_rejects_names_the_blog_cannot_reference(self):
         write(self.scenarios / "Part-01" / "Two.toml", SCENARIO)
         self.assertEqual(cap.main(["capture.py", str(self.scenarios), str(self.out)]), 1)
+
+    def test_no_scenarios_found_and_preserves_output(self):
+        keep = write(self.out / "part-01" / "keep.json", "{}")
+        self.assertEqual(cap.main(["capture.py", str(self.scenarios), str(self.out)]), 1)
+        self.assertTrue(keep.exists())
 
 
 if __name__ == "__main__":
