@@ -7,7 +7,7 @@ ARC1_CFLAGS := -O0 -g -fno-pie -no-pie
 
 BINARIES := part-01/hello
 
-.PHONY: build image shell test versions clean
+.PHONY: build image shell test versions capture clean
 
 build: $(BINARIES)
 
@@ -26,6 +26,13 @@ test:
 versions: image
 	docker run --rm $(IMAGE) sh -c \
 	  'gcc --version | head -1; objdump --version | head -1; gdb --version | head -1'
+
+capture: image
+	@test -n "$(BLOG)" || { echo "usage: make capture BLOG=path/to/0x4142"; exit 1; }
+	mkdir -p "$(abspath $(BLOG))/src/captures/reverse-engineering"
+	docker run --rm --user "$$(id -u):$$(id -g)" \
+	  -v "$(abspath $(BLOG))/src/captures/reverse-engineering:/out" \
+	  $(IMAGE) python3 capture.py captures /out
 
 clean:
 	rm -f $(BINARIES)

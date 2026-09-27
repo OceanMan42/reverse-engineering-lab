@@ -1,0 +1,15 @@
+title = "From C to a binary"
+tool = "shell"
+cwd = "part-01"
+
+[[step]]
+label = "the source"
+command = "cat hello.c"
+
+[[step]]
+label = "the compiler's assembly output"
+command = "gcc -O0 -fno-pie -masm=intel -fno-asynchronous-unwind-tables -S -o - hello.c"
+
+[[step]]
+label = "the finished binary"
+command = "file hello"

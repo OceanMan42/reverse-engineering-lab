@@ -1,0 +1,7 @@
+title = "readelf: sections"
+tool = "shell"
+cwd = "part-01"
+
+[[step]]
+label = "section headers"
+command = "readelf -S hello"

@@ -1,0 +1,7 @@
+title = "objdump: main in assembly"
+tool = "shell"
+cwd = "part-01"
+
+[[step]]
+label = "disassembly of main"
+command = "objdump -d -M intel --no-show-raw-insn --disassembler-color=on --disassemble=main hello"

@@ -1,0 +1,7 @@
+title = "file: what did gcc produce?"
+tool = "shell"
+cwd = "part-01"
+
+[[step]]
+label = "identify the binary"
+command = "file hello"

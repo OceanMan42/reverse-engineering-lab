@@ -1,0 +1,7 @@
+title = "nm: symbols"
+tool = "shell"
+cwd = "part-01"
+
+[[step]]
+label = "symbols in the binary"
+command = "nm hello"
